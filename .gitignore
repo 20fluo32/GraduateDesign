@@ -1,0 +1,30 @@
+ __pycache__/
+*.pyc
+*.zip
+dataset
+spirit.away
+.DS_Store
+.todo
+.cache
+.cog
+runs
+tmp
+zip_code*
+test.ipynb
+inference_images/
+*.mp4
+./*.jpg
+*.pt
+runs_train_photo_Arcane
+runs_train_photo_Hayao
+runs_train_photo_Paprika
+runs_train_photo_Shinkai
+dataset_arcane
+1 (24).jpg
+anime.jpg
+temp.jpg
+example
+face.jpg
+user/abc.txt
+template
+.idea
