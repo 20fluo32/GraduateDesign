@@ -11,7 +11,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     # 模型相关参数
     parser.add_argument('--model', type=str, default='v2', help="AnimeGAN version, can be {'v1', 'v2', 'v3'}")
-    parser.add_argument('--resume_G', type=str, default='./runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt', help="Path to generator weights")
+    parser.add_argument('--resume_G', type=str, default='./runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
+                        help="Path to generator weights")
     parser.add_argument('--imgsz', type=int, nargs="+", default=[256], help="Image size for ONNX export")
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu',
                         help="Device to use")
@@ -68,11 +69,13 @@ def export_onnx(args):
         dummy_input,  # 模型输入
         onnx_path,  # 导出的 ONNX 文件路径
         export_params=True,  # 导出模型参数
-        opset_version=10,  # ONNX 操作集版本
+        opset_version=11,  # ONNX 操作集版本
         do_constant_folding=True,  # 是否执行常量折叠优化
         input_names=['input'],  # 输入张量的名称
         output_names=['output'],  # 输出张量的名称
-        dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}  # 支持动态 batch size
+        dynamic_axes={'input': {0: 'batch_size', 2: 'height', 3: 'width'},
+                      'output': {0: 'batch_size', 2: 'height', 3: 'width'}}
+        # 支持动态 batch size
     )
 
     print(f"ONNX model exported to {onnx_path}")
