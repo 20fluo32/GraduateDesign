@@ -21,10 +21,11 @@ runs_train_photo_Paprika
 runs_train_photo_Shinkai
 dataset_arcane
 1 (24).jpg
-anime.jpg
+test/anime.jpg
 temp.jpg
 example
 face.jpg
 user/abc.txt
 template
 .idea
+*.jpg
