@@ -50,7 +50,7 @@ def export_onnx(args):
     # 加载模型权重
     G.load_state_dict(state_dict)
 
-    # 设置模型为评估模式
+    # 设置模型为评估模式,同时统一device
     G.to(device)
     G.eval()
 
