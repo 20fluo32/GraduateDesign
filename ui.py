@@ -9,6 +9,19 @@ import argparse
 import cv2
 import numpy as np
 import sys
+from inference import Predictor
+
+# 测试代码
+predictor = Predictor(
+    './runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
+    # './runs_train_photo_Paprika/epoch_90/GeneratorV2_train_photo_Paprika.pt',
+    # './runs_train_photo_Shinkai/epoch_50/GeneratorV2_train_photo_Shinkai.pt',
+    # './runs_train_photo_Arcane/GeneratorV2_train_photo_Arcane.pt',
+    # 'hayao:v2',
+    # if set True, generated image will retain original color as input image
+    retain_color=True
+)
+
 
 def preidct(info1):
     QApplication.processEvents()
@@ -23,7 +36,44 @@ class Thread_1(QThread):  # 线程1
 
     def run2(self, info1):
         result = []
-        # result = det_yolov5v6(info1)
+        result = show(info1)
+
+
+def show(info1):
+    predictor.transform_file(info1, './output_dir/anime.jpg')
+    show = cv2.imread(info1)
+    h = show.shape[0]
+    w = show.shape[1]
+    ui.showimg(show)
+    show2 = cv2.imread('./output_dir/anime.jpg')
+    # show2copy = show2.copy()
+
+    # 图片降噪
+    # 使用高斯滤波器对图像进行降噪
+    # (5,5)表示滤波器的大小，0表示标准差，即滤波器的模糊程度
+    # show2 = cv2.GaussianBlur(show2, (5, 5), 0)
+
+    # 使用中值滤波器对图像进行降噪
+    # 5表示滤波器的大小，即像素点的邻域大小
+    # show2 = cv2.medianBlur(show2, 5)
+
+    # 使用双边滤波器对图像进行降噪
+    # 9表示邻域直径，75表示空间高斯函数标准差，75表示灰度值相似性高斯函数标准差
+    # show2 = cv2.bilateralFilter(show2, 9, 75, 75)
+
+    # 使用快速非局部均值去噪算法对彩色图像进行降噪
+    # None表示没有特定的滤波器模板，10表示邻域大小，10表示相似性权重，7表示空间权重，21表示搜索窗口大小
+    # show2 = cv2.fastNlMeansDenoisingColored(show2, None, 10, 10, 7, 21)
+
+    # 再次使用快速非局部均值去噪算法对彩色图像进行降噪
+    # 参数与上面一致
+    # show2 = cv2.fastNlMeansDenoisingColored(show2, None, 10, 10, 7, 21)
+    # cv2.imshow('after_data_enhance', show2copy)
+    # cv2.imshow('before_data_enhance', show2)
+
+    ui.showimg2(show2)
+    QApplication.processEvents()
+    cv2.waitKey(0)
 
 
 # ui的交互核心代码
