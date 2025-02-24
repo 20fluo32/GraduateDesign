@@ -42,7 +42,7 @@ def export_onnx(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     checkpoint = torch.load(args.resume_G, map_location=device)  # 加载 checkpoint
     if 'model_state_dict' in checkpoint:
-        # 如果 checkpoint 包含 "model_state_dict"，则提取模型权重
+        # 如果 checkpoint 包含 "model_state_dict"，则提取模型权重，这种是为了适配.pt，因为.pt会包含epoch等信息，较为完整
         state_dict = checkpoint['model_state_dict']
     else:
         # 否则直接使用 checkpoint 作为 state_dict
