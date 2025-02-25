@@ -2,11 +2,11 @@ from inference import Predictor
 
 # 测试代码
 predictor = Predictor(
-    './runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
+    # './runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
     # './runs_train_photo_Paprika/epoch_90/GeneratorV2_train_photo_Paprika.pt',
     # './runs_train_photo_Shinkai/epoch_50/GeneratorV2_train_photo_Shinkai.pt',
     # './runs_train_photo_Arcane/GeneratorV2_train_photo_Arcane.pt',
-    # 'hayao:v2',
+    'hayao:v2',
     # if set True, generated image will retain original color as input image
     retain_color=True
 )

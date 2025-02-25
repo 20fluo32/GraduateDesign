@@ -13,17 +13,17 @@ from utils.logger import get_logger
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--real_image_dir', type=str, default='dataset_arcane/train_photo')  # 真实图片路径
-    parser.add_argument('--anime_image_dir', type=str, default='dataset_arcane/Arcane')  # 动漫风格图片路径
-    parser.add_argument('--test_image_dir', type=str, default='dataset_arcane/test')  # 测试图片路径
+    parser.add_argument('--real_image_dir', type=str, default='dataset/train_photo')  # 真实图片路径
+    parser.add_argument('--anime_image_dir', type=str, default='dataset/Hayao')  # 动漫风格图片路径
+    parser.add_argument('--test_image_dir', type=str, default='dataset/test/HR_photo')  # 测试图片路径
     parser.add_argument('--model', type=str, default='v2', help="AnimeGAN version, can be {'v1', 'v2', 'v3'}")  # 模型选择
-    parser.add_argument('--epochs', type=int, default=70)  # 迭代次数
+    parser.add_argument('--epochs', type=int, default=100)  # 迭代次数
     parser.add_argument('--init_epochs', type=int, default=20)  # 初始化迭代
     parser.add_argument('--batch_size', type=int, default=12)  # 数据轮大小
     parser.add_argument('--exp_dir', type=str, default='runs', help="Experiment directory")  # 环境目录
     parser.add_argument('--gan_loss', type=str, default='lsgan', help='lsgan / hinge / bce')  # gan损失
     parser.add_argument('--resume', action='store_true', help="Continue from current dir")  # 恢复训练，就是继续训练
-    parser.add_argument('--resume_G_init', type=str, default='arcane:v2')  # 生成器初始化恢复,预权重训练
+    parser.add_argument('--resume_G_init', type=str, default='hayao:v2')  # 生成器初始化恢复,预权重训练
     parser.add_argument('--resume_G', type=str, default='False')  # 恢复生成器权重
     parser.add_argument('--resume_D', type=str, default='False')  # 恢复判别器权重
     parser.add_argument('--device', type=str, default='cuda')  # 设备
@@ -40,7 +40,7 @@ def parse_args():
     # Loss stuff
     parser.add_argument('--lr_g', type=float, default=2e-5)  # 生成器学习率
     parser.add_argument('--lr_d', type=float, default=4e-5)  # 判别器学习率
-    parser.add_argument('--init_lr', type=float, default=2e-4)  # 初始化学习率
+    parser.add_argument('--init_lr', type=float, default=1e-4)  # 初始化学习率
     parser.add_argument('--wadvg', type=float, default=300.0, help='Adversarial loss weight for G')  # 生成器对抗损失权重
     parser.add_argument('--wadvd', type=float, default=300.0, help='Adversarial loss weight for D')
     parser.add_argument(
@@ -48,11 +48,11 @@ def parse_args():
         help="If given, train adversarial with gray scale image instead of RGB image to reduce color effect of anime style")
 
     # Loss weight VGG19
-    parser.add_argument('--wcon', type=float, default=1.8,
+    parser.add_argument('--wcon', type=float, default=1.5,
                         help='Content loss weight')  # 1.5 for Hayao, 2.0 for Paprika, 1.2 for Shinkai
-    parser.add_argument('--wgra', type=float, default=2.2,
+    parser.add_argument('--wgra', type=float, default=2.5,
                         help='Gram loss weight')  # 2.5 for Hayao, 0.6 for Paprika, 2.0 for Shinkai
-    parser.add_argument('--wcol', type=float, default=12.0,
+    parser.add_argument('--wcol', type=float, default=15.0,
                         help='Color loss weight')  # 15. for Hayao, 50. for Paprika, 10. for Shinkai
     parser.add_argument('--wtvar', type=float, default=1.0,
                         help='Total variation loss')  # 1. for Hayao, 0.1 for Paprika, 1. for Shinkai
