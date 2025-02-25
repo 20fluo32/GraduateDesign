@@ -1,6 +1,8 @@
 import torch
 import argparse
 import os
+
+from inference import auto_load_weight
 from models.anime_gan import GeneratorV1
 from models.anime_gan_v2 import GeneratorV2
 from models.anime_gan_v3 import GeneratorV3
@@ -11,7 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     # 模型相关参数
     parser.add_argument('--model', type=str, default='v2', help="AnimeGAN version, can be {'v1', 'v2', 'v3'}")
-    parser.add_argument('--resume_G', type=str, default='./runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
+    parser.add_argument('--weight', type=str, default='./runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
                         help="Path to generator weights")
     parser.add_argument('--imgsz', type=int, nargs="+", default=[256], help="Image size for ONNX export")
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu',
@@ -29,31 +31,33 @@ def parse_args():
 
 def export_onnx(args):
     # 选择模型版本
-    if args.model == 'v1':
-        G = GeneratorV1()
-    elif args.model == 'v2':
-        G = GeneratorV2()
-    elif args.model == 'v3':
-        G = GeneratorV3()
-    else:
-        raise ValueError(f"Unsupported model version: {args.model}")
+    # if args.model == 'v1':
+    #     G = GeneratorV1()
+    # elif args.model == 'v2':
+    #     G = GeneratorV2()
+    # elif args.model == 'v3':
+    #     G = GeneratorV3()
+    # else:
+    #     raise ValueError(f"Unsupported model version: {args.model}")
 
     # 加载权重
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    checkpoint = torch.load(args.resume_G, map_location=device)  # 加载 checkpoint
-    if 'model_state_dict' in checkpoint:
-        # 如果 checkpoint 包含 "model_state_dict"，则提取模型权重，这种是为了适配.pt，因为.pt会包含epoch等信息，较为完整
-        state_dict = checkpoint['model_state_dict']
-    else:
-        # 否则直接使用 checkpoint 作为 state_dict
-        state_dict = checkpoint
+    # checkpoint = torch.load(args.weight, map_location=device)  # 加载 checkpoint
+    # if 'model_state_dict' in checkpoint:
+    #     # 如果 checkpoint 包含 "model_state_dict"，则提取模型权重，这种是为了适配.pt，因为.pt会包含epoch等信息，较为完整
+    #     state_dict = checkpoint['model_state_dict']
+    # else:
+    #     # 否则直接使用 checkpoint 作为 state_dict
+    #     state_dict = checkpoint
 
     # 加载模型权重
-    G.load_state_dict(state_dict)
+    # G.load_state_dict(state_dict)
+    weight = args.weight
+    G = auto_load_weight(weight, map_location=device)
 
     # 设置模型为评估模式,同时统一device
     G.to(device)
-    G.eval()
+    # G.eval()
 
     # 创建一个随机输入张量，用于导出 ONNX 模型
     # 假设输入图像的大小为 [batch_size, channels, height, width]
