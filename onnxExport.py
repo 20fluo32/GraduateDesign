@@ -13,7 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     # 模型相关参数
     parser.add_argument('--model', type=str, default='v2', help="AnimeGAN version, can be {'v1', 'v2', 'v3'}")
-    parser.add_argument('--weight', type=str, default='./runs_train_photo_Hayao/GeneratorV2_train_photo_Hayao.pt',
+    parser.add_argument('--weight', type=str, default='hayao:v2',
                         help="Path to generator weights")
     parser.add_argument('--imgsz', type=int, nargs="+", default=[256], help="Image size for ONNX export")
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu',
