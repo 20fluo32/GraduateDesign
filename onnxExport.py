@@ -57,7 +57,7 @@ def export_onnx(args):
 
     # 设置模型为评估模式,同时统一device
     G.to(device)
-    # G.eval()
+    G.eval()
 
     # 创建一个随机输入张量，用于导出 ONNX 模型
     # 假设输入图像的大小为 [batch_size, channels, height, width]
