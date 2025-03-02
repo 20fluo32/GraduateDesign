@@ -63,12 +63,3 @@ output_image = postprocess_output(torch.from_numpy(output_data[0]), original_siz
 output_image_path = "./anime.jpg"
 output_image.save(output_image_path)
 print(f"生成的图片已保存到 {output_image_path}")
-
-# # 显示输入和输出图像
-# input_image = cv2.cvtColor(cv2.imread(input_image_path), cv2.COLOR_BGR2RGB)
-# output_image = cv2.cvtColor(cv2.imread(output_image_path), cv2.COLOR_BGR2RGB)
-#
-# cv2.imshow("Input Image", input_image)
-# cv2.imshow("Output Image", output_image)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
