@@ -1,6 +1,6 @@
 import base64
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, Blueprint
 import os
 from inference import Predictor
 from werkzeug.utils import secure_filename
@@ -8,6 +8,9 @@ from werkzeug.utils import secure_filename
 from utils import RELEASED_WEIGHTS
 
 app = Flask(__name__)
+
+# 创建一个 Blueprint，并设置前缀为 /api/v1
+api_v1 = Blueprint('api_v1', __name__, url_prefix='/image')
 
 # 配置上传和生成图像的目录
 UPLOAD_FOLDER = './upload_images'
@@ -36,7 +39,7 @@ class Response:
 
 
 # 图片转换接口
-@app.route('/transform', methods=['POST'])
+@api_v1.route('/transform', methods=['POST'])
 def transform_image():
     # 检查是否有文件上传
     if 'file' not in request.files:
@@ -74,7 +77,7 @@ def transform_image():
             message="Image generated successfully",
             data={
                 "file": encoded_file,  # Base64 图片数据
-                "download_url": f"/download/{os.path.basename(generated_path)}"  # 下载链接
+                "download_url": f"/image/download/{os.path.basename(generated_path)}"  # 下载链接
             }
         ).to_dict())
 
@@ -87,7 +90,7 @@ def transform_image():
 
 
 # 图片下载接口
-@app.route("/download/<filename>", methods=["GET"])
+@api_v1.route("/download/<filename>", methods=["GET"])
 def download_file(filename):
     """提供图片下载"""
     file_path = os.path.join(app.config['GENERATED_FOLDER'], filename)
@@ -98,4 +101,5 @@ def download_file(filename):
 
 
 if __name__ == '__main__':
+    app.register_blueprint(api_v1)
     app.run(debug=True)
