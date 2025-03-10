@@ -183,6 +183,9 @@ class Predictor:
         image = self.read_and_resize(file_path)
         anime_img = self.transform(image)[0]
         cv2.imwrite(save_path, anime_img[..., ::-1])
+        # Release GPU memory
+        if self.device_type == 'cuda':
+            torch.cuda.empty_cache()
         print(f"Anime image saved to {save_path}")
 
     @profile
